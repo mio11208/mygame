@@ -1,0 +1,24 @@
+{
+  "TANTHU500K": {
+    "code": "TANTHU500K",
+    "reward": 500,
+    "rewardVND": "500.000 đ",
+    "maxUses": 1000,
+    "usedCount": 1,
+    "usedBy": [
+      "testuser_1792033594353"
+    ],
+    "isActive": true,
+    "createdAt": "2026-10-15T03:00:00.000Z"
+  },
+  "VIP999": {
+    "code": "VIP999",
+    "reward": 1000,
+    "rewardVND": "1.000.000 đ",
+    "maxUses": 50,
+    "usedCount": 0,
+    "usedBy": [],
+    "isActive": true,
+    "createdAt": "2026-10-15T03:00:00.000Z"
+  }
+}

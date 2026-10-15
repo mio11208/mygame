@@ -1,0 +1,7 @@
+node_modules/
+cloudflared.exe
+*.zip
+ui quay hu.png
+scratch/
+.DS_Store
+Thumbs.db

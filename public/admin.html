@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Quản Lý Tài Khoản & Số Dư Người Chơi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0e1a;
+      --bg-card: rgba(18, 26, 46, 0.9);
+      --bg-input: #121a2d;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --accent-gold: #f59e0b;
+      --accent-green: #10b981;
+      --accent-blue: #38bdf8;
+      --accent-red: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: radial-gradient(circle at top center, #182440 0%, #0a0e1a 75%);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+    }
+
+    /* Màn hình đăng nhập Admin */
+    .login-container {
+      max-width: 420px;
+      margin: 60px auto 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 32px 28px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      text-align: center;
+    }
+
+    .login-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: var(--accent-gold);
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    /* Header Admin Dashboard */
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .admin-title-box h1 {
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .admin-title-box p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-header {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      border: 1px solid var(--border-color);
+      background: rgba(255, 255, 255, 0.05);
+      color: #e2e8f0;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-header.logout {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.3);
+      color: #f87171;
+    }
+
+    /* Thẻ thống kê */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 18px 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-top: 6px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Bảng danh sách người chơi */
+    .table-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .table-header-bar {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .table-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .search-box {
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 6px 12px;
+      color: #ffffff;
+      font-size: 13px;
+      width: 200px;
+      outline: none;
+    }
+
+    .user-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .user-table th {
+      padding: 14px 18px;
+      background: rgba(0, 0, 0, 0.2);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+    }
+
+    .user-table td {
+      padding: 14px 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 13px;
+      vertical-align: middle;
+    }
+
+    .user-cell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #ffffff;
+      font-size: 13px;
+    }
+
+    .balance-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent-green);
+    }
+
+    .balance-vnd {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .quick-actions-cell {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .btn-act {
+      padding: 5px 9px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-act.add-50k { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
+    .btn-act.add-500k { background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .btn-act.add-5m { background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .btn-act.reset-50k { background: rgba(244, 63, 94, 0.2); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.4); }
+    .btn-act:hover { transform: translateY(-1px); filter: brightness(1.2); }
+
+    .custom-input-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: 6px;
+    }
+
+    .input-custom-bal {
+      width: 75px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 4px 6px;
+      color: #ffffff;
+      font-size: 11px;
+      outline: none;
+    }
+
+    .btn-apply-custom {
+      background: #4f46e5;
+      color: #ffffff;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Quản lý Giftcode */
+    .giftcode-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .giftcode-form-grid {
+      display: grid;
+      grid-template-columns: 2fr 2fr 1.5fr auto;
+      gap: 12px;
+      align-items: flex-end;
+      margin-top: 16px;
+      margin-bottom: 20px;
+      background: rgba(10, 14, 26, 0.6);
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+    }
+
+    @media (max-width: 768px) {
+      .giftcode-form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-group-admin {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group-admin label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .input-admin-code {
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: #ffffff;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .input-admin-code:focus {
+      border-color: var(--accent-gold);
+    }
+
+    .btn-create-code {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #000;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-create-code:hover {
+      filter: brightness(1.15);
+      transform: translateY(-1px);
+    }
+
+    .giftcode-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 800;
+      color: #f59e0b;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      padding: 4px 10px;
+      border-radius: 8px;
+      display: inline-block;
+      letter-spacing: 0.5px;
+    }
+
+    .used-users-tag {
+      font-size: 11px;
+      color: #94a3b8;
+      max-width: 180px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* Modal Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1e293b;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 12px 20px;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      font-size: 13px;
+      font-weight: 600;
+      color: #ffffff;
+      display: none;
+      z-index: 99999;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. GIAO DIỆN ĐĂNG NHẬP ADMIN -->
+  <div id="loginSection" class="login-container">
+    <div class="login-badge">ADMIN CONTROL PANEL</div>
+    <h2 style="margin-bottom: 8px; font-weight:800;">Đăng Nhập Quản Trị</h2>
+    <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 24px;">Bảo mật quản lý tài khoản & số dư người chơi</p>
+
+    <div id="loginError" style="display:none; color:#ef4444; background:rgba(239,68,68,0.15); padding:8px; border-radius:8px; font-size:12px; margin-bottom:14px;"></div>
+
+    <form onsubmit="handleAdminLogin(event)">
+      <div style="text-align: left; margin-bottom: 14px;">
+        <label style="font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; display:block;">Tài khoản Admin</label>
+        <input type="text" id="adminUser" value="admin" style="width:100%; padding:10px 14px; background:var(--bg-input); border:1px solid var(--border-color); border-radius:8px; color:#fff; font-size:14px; outline:none;" required>
+      </div>
+
+      <div style="text-align: left; margin-bottom: 20px;">
+        <label style="font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; display:block;">Mật khẩu</label>
+        <input type="password" id="adminPass" placeholder="Nhập mật khẩu..." style="width:100%; padding:10px 14px; background:var(--bg-input); border:1px solid var(--border-color); border-radius:8px; color:#fff; font-size:14px; outline:none;" required autocomplete="current-password">
+        <div style="font-size:11px; color:#64748b; margin-top:4px;">(Mặc định: admin123)</div>
+      </div>
+
+      <button type="submit" style="width:100%; padding:12px; background:linear-gradient(180deg, #f59e0b, #d97706); color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer; font-size:14px;">Đăng Nhập</button>
+    </form>
+  </div>
+
+  <!-- 2. GIAO DIỆN QUẢN TRỊ VIÊN CHÍNH -->
+  <div id="dashboardSection" class="container" style="display:none;">
+    <div class="admin-header">
+      <div class="admin-title-box">
+        <h1>⚙️ Bảng Điều Khiển Số Dư Admin</h1>
+        <p>Quản lý và cấp số dư thời gian thực cho từng người chơi</p>
+      </div>
+      <div class="header-actions">
+        <a href="/" target="_blank" class="btn-header">
+          <span>🏠</span> Xem Cổng Game
+        </a>
+        <button class="btn-header logout" onclick="handleAdminLogout()">
+          <span>🚪</span> Đăng Xuất
+        </button>
+      </div>
+    </div>
+
+    <!-- Thẻ thống kê -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Tổng người chơi</div>
+        <div class="stat-value" id="statTotalUsers" style="color:#38bdf8;">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Tổng số dư lưu hành</div>
+        <div class="stat-value" id="statTotalBalance" style="color:#10b981;">0 đ</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Tài khoản bị khóa</div>
+        <div class="stat-value" id="statBannedUsers" style="color:#ef4444;">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Mã Giftcode đang mở</div>
+        <div class="stat-value" id="statTotalGiftcodes" style="color:#f59e0b;">0</div>
+      </div>
+    </div>
+
+    <!-- Quản Lý Gift Code (Mã Quà Tặng) -->
+    <div class="giftcode-card">
+      <div class="table-header-bar" style="margin-bottom: 0;">
+        <div>
+          <div class="table-title" style="display:flex; align-items:center; gap:8px;">
+            <span>🎁</span> Quản Lý Mã Quà Tặng (Gift Code)
+          </div>
+          <p style="font-size:12px; color:var(--text-secondary); margin-top:4px;">
+            Tùy chỉnh mã code và số tiền thưởng để người chơi nhập nhận tiền trực tiếp vào ví
+          </p>
+        </div>
+      </div>
+
+      <!-- Form Tạo Gift Code Mới -->
+      <form id="createGiftCodeForm" onsubmit="handleCreateGiftCode(event)" class="giftcode-form-grid">
+        <div class="form-group-admin">
+          <label>Mã Gift Code</label>
+          <input type="text" id="inputGiftCodeName" class="input-admin-code" placeholder="VD: TANTHU500K, VIP1TR..." style="text-transform:uppercase; font-weight:700; color:#f59e0b;" required>
+        </div>
+        <div class="form-group-admin">
+          <label>Số Tiền Thưởng (VNĐ)</label>
+          <input type="number" id="inputGiftCodeAmount" class="input-admin-code" placeholder="VD: 500000, 100000..." min="1000" step="1000" required>
+        </div>
+        <div class="form-group-admin">
+          <label>Số Lượt Dùng Tối Đa</label>
+          <input type="number" id="inputGiftCodeMaxUses" class="input-admin-code" placeholder="VD: 100" value="100" min="1" required>
+        </div>
+        <div>
+          <button type="submit" class="btn-create-code">
+            <span>➕</span> Tạo Gift Code
+          </button>
+        </div>
+      </form>
+
+      <!-- Bảng Danh Sách Gift Code -->
+      <div style="overflow-x: auto;">
+        <table class="user-table">
+          <thead>
+            <tr>
+              <th>Mã Gift Code</th>
+              <th>Tiền Thưởng</th>
+              <th>Lượt Đã Dùng</th>
+              <th>Người Đã Nhận</th>
+              <th>Ngày Tạo</th>
+              <th>Thao Tác</th>
+            </tr>
+          </thead>
+          <tbody id="giftCodeTableBody">
+            <tr>
+              <td colspan="6" style="text-align: center; color: #64748b; padding: 24px;">Đang tải danh sách Giftcode...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Bảng danh sách người chơi -->
+    <div class="table-card">
+      <div class="table-header-bar">
+        <div class="table-title">Danh Sách Thành Viên & Số Dư Ví</div>
+        <input type="text" id="searchInput" class="search-box" placeholder="Tìm theo tên tài khoản..." oninput="renderTable()">
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table class="user-table">
+          <thead>
+            <tr>
+              <th>Tài Khoản</th>
+              <th>Số Dư Ví</th>
+              <th>Trạng Thái</th>
+              <th>Ngày Đăng Ký</th>
+              <th>Thao Tác Nạp / Chỉnh Tiền / Khóa Acc</th>
+            </tr>
+          </thead>
+          <tbody id="userTableBody">
+            <tr>
+              <td colspan="5" style="text-align: center; color: #64748b; padding: 30px;">Đang tải danh sách người chơi...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    let allUsers = [];
+
+    function showToast(msg, isSuccess = true) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.style.borderColor = isSuccess ? '#10b981' : '#ef4444';
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 2200);
+    }
+
+    async function handleAdminLogin(e) {
+      e.preventDefault();
+      const username = document.getElementById('adminUser').value.trim();
+      const password = document.getElementById('adminPass').value.trim();
+      const errBox = document.getElementById('loginError');
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+        if (data.ok && data.user && data.user.role === 'admin') {
+          localStorage.setItem('admin_token', data.token);
+          checkAdminAuth();
+        } else {
+          errBox.textContent = data.msg || 'Tài khoản không có quyền Admin hoặc sai mật khẩu!';
+          errBox.style.display = 'block';
+        }
+      } catch (err) {
+        errBox.textContent = 'Lỗi kết nối máy chủ!';
+        errBox.style.display = 'block';
+      }
+    }
+
+    function handleAdminLogout() {
+      localStorage.removeItem('admin_token');
+      document.getElementById('loginSection').style.display = 'block';
+      document.getElementById('dashboardSection').style.display = 'none';
+    }
+
+    async function checkAdminAuth() {
+      const token = localStorage.getItem('admin_token');
+      if (!token) {
+        document.getElementById('loginSection').style.display = 'block';
+        document.getElementById('dashboardSection').style.display = 'none';
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/admin/users', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        if (data.ok) {
+          document.getElementById('loginSection').style.display = 'none';
+          document.getElementById('dashboardSection').style.display = 'block';
+          allUsers = data.users || [];
+          renderTable();
+          updateStats();
+          loadGiftCodes();
+        } else {
+          handleAdminLogout();
+        }
+      } catch (e) {
+        handleAdminLogout();
+      }
+    }
+
+    function formatVND(num) {
+      return (Number(num) * 1000).toLocaleString('vi-VN') + ' đ';
+    }
+
+    function updateStats() {
+      document.getElementById('statTotalUsers').textContent = allUsers.length;
+      const totalCredits = allUsers.reduce((sum, u) => sum + (u.balance || 0), 0);
+      document.getElementById('statTotalBalance').textContent = formatVND(totalCredits);
+      const bannedCount = allUsers.filter(u => u.isBanned).length;
+      document.getElementById('statBannedUsers').textContent = bannedCount;
+      if (document.getElementById('statTotalGiftcodes')) {
+        document.getElementById('statTotalGiftcodes').textContent = allGiftCodes.filter(c => c.isActive !== false).length;
+      }
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('userTableBody');
+      const query = document.getElementById('searchInput').value.trim().toLowerCase();
+
+      const filtered = allUsers.filter(u => u.username.toLowerCase().includes(query));
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #64748b; padding: 24px;">Không tìm thấy người chơi nào.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(u => {
+        const regDate = u.createdAt ? new Date(u.createdAt).toLocaleDateString('vi-VN') : 'Mới';
+        const isBanned = Boolean(u.isBanned);
+        return `
+          <tr style="${isBanned ? 'background: rgba(239, 68, 68, 0.05);' : ''}">
+            <td>
+              <div class="user-cell">
+                <div class="user-avatar" style="${isBanned ? 'background: linear-gradient(135deg, #ef4444, #991b1b);' : ''}">${u.username.charAt(0).toUpperCase()}</div>
+                <div>
+                  <div style="font-weight:700; ${isBanned ? 'color:#f87171;' : ''}">${u.username}</div>
+                  <div style="font-size:11px; color:#64748b;">Role: ${u.role}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="balance-pill">${Number(u.balance).toFixed(2)}</div>
+              <div class="balance-vnd">${formatVND(u.balance)}</div>
+            </td>
+            <td>
+              ${isBanned 
+                ? `<span style="background:rgba(239,68,68,0.18); color:#ef4444; border:1px solid rgba(239,68,68,0.4); padding:3px 8px; border-radius:6px; font-size:11px; font-weight:700; display:inline-flex; align-items:center; gap:4px;">🔒 ĐÃ KHÓA</span>`
+                : `<span style="background:rgba(16,185,129,0.18); color:#10b981; border:1px solid rgba(16,185,129,0.4); padding:3px 8px; border-radius:6px; font-size:11px; font-weight:700; display:inline-flex; align-items:center; gap:4px;">🟢 Hoạt Động</span>`
+              }
+            </td>
+            <td style="color:#94a3b8; font-size:12px;">${regDate}</td>
+            <td>
+              <div class="quick-actions-cell">
+                <button class="btn-act add-50k" onclick="modifyBalance('${u.username}', 50, true)">+50k</button>
+                <button class="btn-act add-500k" onclick="modifyBalance('${u.username}', 500, true)">+500k</button>
+                <button class="btn-act add-5m" onclick="modifyBalance('${u.username}', 5000, true)">+5M</button>
+                <button class="btn-act reset-50k" onclick="modifyBalance('${u.username}', 50, false)">Reset 50k</button>
+
+                <div class="custom-input-group">
+                  <input type="number" id="input_${u.username}" class="input-custom-bal" placeholder="Số tiền..." min="0">
+                  <button class="btn-apply-custom" onclick="applyCustomBalance('${u.username}')">Lưu</button>
+                </div>
+
+                ${isBanned
+                  ? `<button class="btn-act" style="background:rgba(16,185,129,0.2); color:#10b981; border:1px solid rgba(16,185,129,0.5); font-weight:800; margin-left:4px;" onclick="toggleBanUser('${u.username}', false)">🔓 Mở Khóa</button>`
+                  : `<button class="btn-act" style="background:rgba(239,68,68,0.2); color:#ef4444; border:1px solid rgba(239,68,68,0.5); font-weight:800; margin-left:4px;" onclick="toggleBanUser('${u.username}', true)">🔒 Khóa Acc</button>`
+                }
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function toggleBanUser(targetUsername, shouldBan) {
+      const actionText = shouldBan ? 'KHÓA' : 'MỞ KHÓA';
+      const confirmMsg = shouldBan
+        ? `⚠️ Bạn có chắc chắn muốn KHÓA tài khoản [${targetUsername}]?\nNgười chơi này sẽ bị hủy toàn bộ phiên và không thể đăng nhập hay chơi game!`
+        : `Bạn có muốn MỞ KHÓA tài khoản [${targetUsername}] để tiếp tục chơi?`;
+
+      if (!confirm(confirmMsg)) return;
+
+      const token = localStorage.getItem('admin_token');
+      try {
+        const res = await fetch('/api/admin/user/ban', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({ targetUsername, isBanned: shouldBan })
+        });
+        const data = await res.json();
+        if (data.ok) {
+          showToast(`Đã ${actionText} thành công tài khoản [${targetUsername}]!`, !shouldBan);
+          const u = allUsers.find(x => x.username === targetUsername);
+          if (u) u.isBanned = shouldBan;
+          renderTable();
+          updateStats();
+        } else {
+          showToast(data.msg || 'Thao tác thất bại!', false);
+        }
+      } catch (err) {
+        showToast('Lỗi kết nối máy chủ!', false);
+      }
+    }
+
+    async function modifyBalance(targetUsername, amount, isAdd) {
+      const token = localStorage.getItem('admin_token');
+      const payload = { targetUsername };
+      if (isAdd) payload.add = amount;
+      else payload.balance = amount;
+
+      try {
+        const res = await fetch('/api/admin/user/balance', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.ok) {
+          showToast(`Đã cập nhật [${targetUsername}]: ${formatVND(data.balance)}`);
+          // Cập nhật mảng local
+          const u = allUsers.find(x => x.username === targetUsername);
+          if (u) u.balance = data.balance;
+          renderTable();
+          updateStats();
+        } else {
+          showToast(data.msg || 'Có lỗi xảy ra!', false);
+        }
+      } catch (err) {
+        showToast('Lỗi kết nối máy chủ!', false);
+      }
+    }
+
+    function applyCustomBalance(username) {
+      const input = document.getElementById(`input_${username}`);
+      const val = parseFloat(input.value);
+      if (isNaN(val) || val < 0) {
+        showToast('Vui lòng nhập số tiền hợp lệ!', false);
+        return;
+      }
+      modifyBalance(username, val, false);
+      input.value = '';
+    }
+
+    // --- QUẢN LÝ GIFT CODE (MÃ QUÀ TẶNG) ---
+    let allGiftCodes = [];
+
+    async function loadGiftCodes() {
+      const token = localStorage.getItem('admin_token');
+      if (!token) return;
+      try {
+        const res = await fetch('/api/admin/giftcodes', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        if (data.ok) {
+          allGiftCodes = data.giftCodes || [];
+          renderGiftCodes();
+          if (document.getElementById('statTotalGiftcodes')) {
+            document.getElementById('statTotalGiftcodes').textContent = allGiftCodes.filter(c => c.isActive !== false).length;
+          }
+        }
+      } catch (e) {}
+    }
+
+    function renderGiftCodes() {
+      const tbody = document.getElementById('giftCodeTableBody');
+      if (!tbody) return;
+      if (allGiftCodes.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #64748b; padding: 24px;">Chưa có mã Gift Code nào. Hãy tạo mã mới ở trên!</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = allGiftCodes.map(c => {
+        const created = c.createdAt ? new Date(c.createdAt).toLocaleDateString('vi-VN') : 'Mới';
+        const usedByList = c.usedBy || [];
+        const usedByStr = usedByList.length > 0 ? usedByList.join(', ') : 'Chưa có ai';
+        const isFull = c.maxUses && c.usedCount >= c.maxUses;
+        return `
+          <tr>
+            <td>
+              <span class="giftcode-pill">${c.code}</span>
+            </td>
+            <td>
+              <div style="font-weight:700; color:#10b981;">${c.rewardVND || formatVND(c.reward)}</div>
+              <div style="font-size:11px; color:#64748b;">${c.reward} credits</div>
+            </td>
+            <td>
+              <span style="font-weight:700; ${isFull ? 'color:#ef4444;' : 'color:#38bdf8;'}">${c.usedCount}</span> / <span style="color:#94a3b8;">${c.maxUses || '∞'}</span>
+              ${isFull ? ' <span style="font-size:10px; color:#ef4444;">(Hết lượt)</span>' : ''}
+            </td>
+            <td>
+              <div class="used-users-tag" title="${usedByStr}">${usedByStr}</div>
+            </td>
+            <td style="color:#94a3b8; font-size:12px;">${created}</td>
+            <td>
+              <button class="btn-act" style="background:rgba(239,68,68,0.2); color:#ef4444; border:1px solid rgba(239,68,68,0.4);" onclick="deleteGiftCode('${c.code}')">
+                🗑️ Xóa Mã
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function handleCreateGiftCode(e) {
+      e.preventDefault();
+      const token = localStorage.getItem('admin_token');
+      const code = document.getElementById('inputGiftCodeName').value.trim();
+      const amount = parseFloat(document.getElementById('inputGiftCodeAmount').value);
+      const maxUses = parseInt(document.getElementById('inputGiftCodeMaxUses').value) || 100;
+
+      if (!code || isNaN(amount) || amount <= 0) {
+        showToast('Vui lòng điền mã code và số tiền thưởng hợp lệ!', false);
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/admin/giftcode/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({ code, amount, maxUses })
+        });
+        const data = await res.json();
+        if (data.ok) {
+          showToast(`Tạo thành công Giftcode [${code.toUpperCase()}]!`);
+          document.getElementById('inputGiftCodeName').value = '';
+          document.getElementById('inputGiftCodeAmount').value = '';
+          loadGiftCodes();
+        } else {
+          showToast(data.msg || 'Không thể tạo Giftcode!', false);
+        }
+      } catch (err) {
+        showToast('Lỗi kết nối máy chủ!', false);
+      }
+    }
+
+    async function deleteGiftCode(code) {
+      if (!confirm(`⚠️ Bạn có chắc chắn muốn xóa mã Gift Code [${code}]?`)) return;
+      const token = localStorage.getItem('admin_token');
+      try {
+        const res = await fetch('/api/admin/giftcode/delete', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({ code })
+        });
+        const data = await res.json();
+        if (data.ok) {
+          showToast(`Đã xóa mã Giftcode [${code}]!`);
+          loadGiftCodes();
+        } else {
+          showToast(data.msg || 'Xóa mã thất bại!', false);
+        }
+      } catch (err) {
+        showToast('Lỗi kết nối máy chủ!', false);
+      }
+    }
+
+    // Tự động kiểm tra phiên và làm mới dữ liệu mỗi 2 giây để thấy tiền nhảy live khi user quay
+    checkAdminAuth();
+    setInterval(async () => {
+      const token = localStorage.getItem('admin_token');
+      if (token && document.getElementById('dashboardSection').style.display === 'block') {
+        try {
+          const res = await fetch('/api/admin/users', {
+            headers: { 'Authorization': 'Bearer ' + token }
+          });
+          const data = await res.json();
+          if (data.ok) {
+            allUsers = data.users || [];
+            renderTable();
+            updateStats();
+          }
+        } catch(e) {}
+      }
+    }, 2000);
+
+    // Cập nhật danh sách Giftcode mỗi 5 giây
+    setInterval(() => {
+      const token = localStorage.getItem('admin_token');
+      if (token && document.getElementById('dashboardSection').style.display === 'block') {
+        loadGiftCodes();
+      }
+    }, 5000);
+  </script>
+</body>
+</html>

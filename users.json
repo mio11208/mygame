@@ -1,0 +1,73 @@
+{
+  "admin": {
+    "username": "admin",
+    "password": "admin123",
+    "role": "admin",
+    "balance": 999999,
+    "createdAt": "2026-10-14T18:00:00.000Z"
+  },
+  "users": {
+    "demo1": {
+      "username": "demo1",
+      "password": "123",
+      "balance": 50,
+      "role": "user",
+      "createdAt": "2026-10-14T18:00:00.000Z",
+      "lastLogin": "2026-10-14T18:00:00.000Z"
+    },
+    "player1": {
+      "username": "player1",
+      "password": "123",
+      "balance": 50,
+      "role": "user",
+      "createdAt": "2026-10-14T11:04:10.442Z",
+      "lastLogin": "2026-10-14T11:04:10.451Z",
+      "isBanned": false,
+      "bannedReason": ""
+    },
+    "mio": {
+      "username": "mio",
+      "password": "mio11",
+      "balance": 19708.72,
+      "role": "user",
+      "createdAt": "2026-10-14T11:07:58.904Z",
+      "lastLogin": "2026-10-14T11:41:21.543Z"
+    },
+    "user_1792026577445": {
+      "username": "user_1792026577445",
+      "password": "password123",
+      "balance": 574.5,
+      "role": "user",
+      "createdAt": "2026-10-15T01:09:37.529Z",
+      "lastLogin": "2026-10-15T01:09:37.529Z"
+    },
+    "kakak": {
+      "username": "kakak",
+      "password": "kaka",
+      "balance": 0,
+      "role": "user",
+      "createdAt": "2026-10-15T02:08:35.366Z",
+      "lastLogin": "2026-10-15T02:08:35.367Z"
+    },
+    "testuser_1792033594353": {
+      "username": "testuser_1792033594353",
+      "password": "password123",
+      "balance": 750,
+      "role": "user",
+      "isBanned": false,
+      "bannedReason": "",
+      "createdAt": "2026-10-15T03:06:34.705Z",
+      "lastLogin": "2026-10-15T03:06:34.705Z"
+    },
+    "mmmm": {
+      "username": "mmmm",
+      "password": "11111",
+      "balance": 0,
+      "role": "user",
+      "isBanned": false,
+      "bannedReason": "",
+      "createdAt": "2026-10-15T03:08:06.468Z",
+      "lastLogin": "2026-10-15T03:08:06.468Z"
+    }
+  }
+}

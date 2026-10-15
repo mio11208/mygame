@@ -1,0 +1,1936 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>GAMEVUI 24H - Cổng Game Giải Trí Đỉnh Cao</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #0c1527;
+      --bg-darker: #080e1a;
+      --bg-card: #131f38;
+      --bg-sidebar: #0f1a30;
+      --accent-orange: #f59e0b;
+      --accent-blue: #0284c7;
+      --accent-green: #10b981;
+      --text-white: #ffffff;
+      --text-muted: #8e9bb0;
+      --border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-white);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding-bottom: 70px;
+    }
+
+    .app-wrapper {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      background: var(--bg-main);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+    }
+
+    /* 1. Header Logo GAMEVUI 24H */
+    .header-bar {
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-darker);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    .brand-logo svg {
+      width: 28px;
+      height: 28px;
+      fill: #f59e0b;
+    }
+
+    .brand-title {
+      color: #ffffff;
+    }
+
+    .brand-title span {
+      color: #f59e0b;
+    }
+
+    /* 2. Banner Sự kiện */
+    .banner-container {
+      padding: 10px 14px 6px;
+      position: relative;
+    }
+
+    .banner-img-wrapper {
+      width: 100%;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      background: #17233d;
+      aspect-ratio: 567 / 215;
+    }
+
+    .banner-img-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .banner-dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .banner-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.3);
+      transition: all 0.3s;
+    }
+
+    .banner-dot.active {
+      width: 18px;
+      background: #ffffff;
+    }
+
+    /* 3. Top Quick Actions */
+    .top-actions-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      padding: 8px 12px;
+      text-align: center;
+    }
+
+    .top-action-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      color: var(--text-white);
+      transition: transform 0.15s;
+    }
+
+    .top-action-item:active {
+      transform: scale(0.94);
+    }
+
+    .action-icon-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .top-action-item span {
+      font-size: 11px;
+      font-weight: 600;
+      color: #d1d5db;
+    }
+
+    /* 4. User Status Card */
+    .user-status-card {
+      margin: 8px 12px;
+      background: linear-gradient(135deg, #13223f 0%, #0e192f 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .auth-buttons-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-auth {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+
+    .btn-auth:active {
+      transform: scale(0.95);
+    }
+
+    .btn-register-action {
+      background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-login-action {
+      background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+      color: #000;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+    }
+
+    /* Đã đăng nhập */
+    .logged-user-info {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .user-avatar-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .avatar-img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 15px;
+      color: #000;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+    }
+
+    .user-meta-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .user-name-text {
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .user-balance-badge {
+      font-size: 12px;
+      font-weight: 700;
+      color: #10b981;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-user-action {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #f3f4f6;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .user-quick-icons {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .u-icon-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    .u-icon-item:active { transform: scale(0.9); }
+
+    .u-icon-item svg {
+      width: 20px;
+      height: 20px;
+      fill: #10b981;
+    }
+    .u-icon-item:nth-child(2) svg { fill: #38bdf8; }
+    .u-icon-item:nth-child(3) svg { fill: #f59e0b; }
+
+    .u-icon-item span {
+      font-size: 9px;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    /* 5. Main Game Layout (Sidebar + Game Grid) */
+    .main-game-layout {
+      display: flex;
+      flex: 1;
+      margin-top: 6px;
+      padding-bottom: 20px;
+    }
+
+    /* Cột danh mục bên trái */
+    .sidebar-categories {
+      width: 90px;
+      background: var(--bg-sidebar);
+      display: flex;
+      flex-direction: column;
+      border-top-right-radius: 12px;
+      flex-shrink: 0;
+    }
+
+    .cat-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 6px;
+      gap: 4px;
+      border: none;
+      background: transparent;
+      color: #94a3b8;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s;
+    }
+
+    .cat-btn.active {
+      background: #172647;
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .cat-btn.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: #f59e0b;
+      border-top-right-radius: 2px;
+      border-bottom-right-radius: 2px;
+    }
+
+    .cat-icon {
+      font-size: 19px;
+    }
+
+    .cat-name {
+      font-size: 11px;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    /* Cột danh sách game bên phải */
+    .game-content-area {
+      flex: 1;
+      padding: 0 12px;
+      overflow-y: auto;
+    }
+
+    .sub-tabs-header {
+      display: flex;
+      gap: 16px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+
+    .sub-tab {
+      font-size: 12px;
+      font-weight: 600;
+      color: #94a3b8;
+      cursor: pointer;
+      position: relative;
+      transition: color 0.2s;
+    }
+
+    .sub-tab.active {
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .sub-tab.active::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -9px;
+      height: 2px;
+      background: #f59e0b;
+      border-radius: 2px;
+    }
+
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .game-card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .game-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+
+    .game-card:active {
+      transform: scale(0.97);
+    }
+
+    .game-card-banner {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      position: relative;
+      background: #17233d;
+      overflow: hidden;
+    }
+
+    .game-card-banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .game-card-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #e2e8f0;
+      padding: 8px 6px 4px;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .game-card-tag {
+      font-size: 9px;
+      color: #94a3b8;
+      text-align: center;
+      padding-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .card-hot-badge {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      background: linear-gradient(135deg, #ef4444, #f59e0b);
+      color: #ffffff;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      z-index: 2;
+    }
+
+    .card-new-badge {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      color: #ffffff;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      z-index: 2;
+    }
+
+    /* Màn hình Trống / Đang cập nhật */
+    .empty-category-view {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 16px;
+      text-align: center;
+      background: rgba(19, 31, 56, 0.4);
+      border-radius: 14px;
+      border: 1px dashed rgba(255, 255, 255, 0.1);
+      margin-top: 10px;
+    }
+
+    .empty-category-icon {
+      font-size: 42px;
+      margin-bottom: 12px;
+      opacity: 0.8;
+    }
+
+    .empty-category-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+
+    .empty-category-desc {
+      font-size: 12px;
+      color: #94a3b8;
+      max-width: 260px;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .btn-return-all {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: #f59e0b;
+      padding: 6px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* 6. Bottom Navigation Bar */
+    .bottom-nav-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      height: 60px;
+      background: #09101f;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      z-index: 1000;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      color: #64748b;
+      text-decoration: none;
+      cursor: pointer;
+      position: relative;
+      transition: color 0.2s;
+    }
+
+    .nav-item.active {
+      color: #f59e0b;
+    }
+
+    .nav-icon {
+      font-size: 18px;
+    }
+
+    .nav-label {
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .nav-badge-dot {
+      position: absolute;
+      top: 0;
+      right: 4px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #ef4444;
+    }
+
+    /* 7. Modal Đăng nhập / Đăng ký */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 16px;
+    }
+
+    .modal-overlay.show,
+    .modal-overlay.active {
+      display: flex !important;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 380px;
+      background: #111c33;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+      animation: modalFadeIn 0.25s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.92); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-header-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: #0b1324;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .auth-tab-btn {
+      padding: 14px;
+      border: none;
+      background: transparent;
+      color: #94a3b8;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .auth-tab-btn.active {
+      color: #f59e0b;
+      background: #111c33;
+      box-shadow: inset 0 -2px 0 #f59e0b;
+    }
+
+    .modal-body {
+      padding: 24px 20px;
+    }
+
+    .promo-banner-badge {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #10b981;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #94a3b8;
+      margin-bottom: 6px;
+    }
+
+    .form-control {
+      width: 100%;
+      background: #09101f;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 12px 14px;
+      border-radius: 10px;
+      color: #ffffff;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-control:focus {
+      border-color: #f59e0b;
+    }
+
+    .btn-submit-auth {
+      width: 100%;
+      background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+      color: #000;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 8px;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+    }
+
+    .btn-close-modal {
+      display: block;
+      width: 100%;
+      text-align: center;
+      margin-top: 12px;
+      color: #64748b;
+      font-size: 12px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+    }
+
+    .error-msg-box {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #ef4444;
+      font-size: 12px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin-bottom: 14px;
+      display: none;
+    }
+
+    /* 8. Toast Notifications */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 99999;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    .toast-item {
+      background: #172647;
+      color: #fff;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+      animation: toastIn 0.3s ease-out;
+      pointer-events: auto;
+    }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 9. Profile Modal */
+    .profile-card-content {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    /* 10. Leaderboard Modal (Bảng Xếp Hạng) */
+    .lb-modal-box {
+      background: #0d1527;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: 24px;
+      width: 92%;
+      max-width: 440px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(245, 158, 11, 0.15);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      animation: modalFadeIn 0.3s ease-out;
+      max-height: 88vh;
+    }
+
+    .lb-header {
+      background: linear-gradient(180deg, #182542 0%, #0d1527 100%);
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .lb-title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .lb-title-icon {
+      font-size: 26px;
+      filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.6));
+    }
+
+    .lb-title-text h3 {
+      font-size: 16px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: 0.5px;
+    }
+
+    .lb-title-text p {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: 2px;
+    }
+
+    .btn-close-lb {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #94a3b8;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      transition: all 0.2s;
+    }
+    .btn-close-lb:hover {
+      color: #fff;
+      background: rgba(239, 68, 68, 0.2);
+      border-color: rgba(239, 68, 68, 0.4);
+    }
+
+    .lb-podium {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 12px;
+      padding: 18px 16px 14px;
+      background: radial-gradient(circle at 50% 20%, rgba(245, 158, 11, 0.12) 0%, transparent 70%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .podium-slot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      text-align: center;
+      position: relative;
+    }
+
+    .podium-slot.rank-1 {
+      order: 2;
+      transform: translateY(-8px);
+    }
+    .podium-slot.rank-2 {
+      order: 1;
+    }
+    .podium-slot.rank-3 {
+      order: 3;
+    }
+
+    .podium-crown {
+      font-size: 20px;
+      margin-bottom: -6px;
+      z-index: 2;
+      animation: crownBounce 2s infinite ease-in-out;
+    }
+    @keyframes crownBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .podium-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #fff;
+      font-size: 19px;
+      position: relative;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .rank-1 .podium-avatar {
+      width: 62px;
+      height: 62px;
+      font-size: 24px;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      border: 3px solid #fbbf24;
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+    }
+
+    .rank-2 .podium-avatar {
+      background: linear-gradient(135deg, #94a3b8, #64748b);
+      border: 2px solid #cbd5e1;
+      box-shadow: 0 0 15px rgba(148, 163, 184, 0.4);
+    }
+
+    .rank-3 .podium-avatar {
+      background: linear-gradient(135deg, #d97706, #92400e);
+      border: 2px solid #f97316;
+      box-shadow: 0 0 15px rgba(217, 119, 6, 0.4);
+    }
+
+    .podium-badge {
+      position: absolute;
+      bottom: -6px;
+      padding: 1px 7px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 800;
+      color: #000;
+    }
+    .rank-1 .podium-badge { background: #fbbf24; }
+    .rank-2 .podium-badge { background: #e2e8f0; }
+    .rank-3 .podium-badge { background: #fdba74; }
+
+    .podium-user {
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-top: 10px;
+      max-width: 90px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .podium-bal {
+      font-size: 11px;
+      font-weight: 800;
+      margin-top: 2px;
+      font-family: monospace;
+    }
+    .rank-1 .podium-bal { color: #fbbf24; }
+    .rank-2 .podium-bal { color: #cbd5e1; }
+    .rank-3 .podium-bal { color: #fdba74; }
+
+    .lb-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-height: 180px;
+    }
+
+    .lb-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 9px 12px;
+      transition: all 0.2s;
+    }
+    .lb-item:hover {
+      background: rgba(255, 255, 255, 0.07);
+    }
+    .lb-item.is-me {
+      background: rgba(245, 158, 11, 0.12);
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+
+    .lb-item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .lb-item-rank {
+      font-size: 13px;
+      font-weight: 800;
+      color: #94a3b8;
+      width: 24px;
+      text-align: center;
+    }
+
+    .lb-item-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e293b, #334155);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .lb-item-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .lb-badge-you {
+      background: rgba(245, 158, 11, 0.2);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      font-size: 9px;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+
+    .lb-item-bal {
+      font-size: 13px;
+      font-weight: 800;
+      color: #10b981;
+      font-family: monospace;
+    }
+
+    .lb-footer {
+      background: #09101f;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 12px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .lb-my-rank {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .lb-my-rank-title {
+      font-size: 10px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .lb-my-rank-val {
+      font-size: 13px;
+      font-weight: 800;
+      color: #f59e0b;
+    }
+
+    .btn-refresh-lb {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-refresh-lb:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <div class="app-wrapper">
+    <!-- 1. Header Bar -->
+    <header class="header-bar">
+      <div class="brand-logo">
+        <svg viewBox="0 0 24 24">
+          <path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+        </svg>
+        <div class="brand-title">GAMEVUI <span>24H</span></div>
+      </div>
+    </header>
+
+    <!-- 2. Banner Sự kiện -->
+    <div class="banner-container">
+      <div class="banner-img-wrapper">
+        <img src="/images/banner.png" alt="Sự Kiện Khám Phá Thế Giới Phiêu Lưu">
+      </div>
+      <div class="banner-dots">
+        <div class="banner-dot active"></div>
+        <div class="banner-dot"></div>
+        <div class="banner-dot"></div>
+        <div class="banner-dot"></div>
+        <div class="banner-dot"></div>
+      </div>
+    </div>
+
+    <!-- 3. Top Quick Actions -->
+    <div class="top-actions-grid">
+      <div class="top-action-item" onclick="showToast('🎁 Nhiệm Vụ Hàng Ngày: Chơi 5 vòng quay nhận thưởng cực lớn!')">
+        <div class="action-icon-circle">📋</div>
+        <span>Nhiệm Vụ</span>
+      </div>
+      <div class="top-action-item" onclick="openGiftcodeModal()">
+        <div class="action-icon-circle" style="background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.4); color: #f59e0b;">🎁</div>
+        <span style="color: #f59e0b; font-weight: 700;">Nhập Code</span>
+      </div>
+      <div class="top-action-item" onclick="openLeaderboardModal()">
+        <div class="action-icon-circle" style="background: rgba(56, 189, 248, 0.15); border-color: rgba(56, 189, 248, 0.35); color: #38bdf8;">🏆</div>
+        <span>Xếp Hạng</span>
+      </div>
+      <div class="top-action-item" onclick="showToast('🏪 Cửa Hàng: Nhập mã Giftcode do Admin cấp để nhận tiền thưởng!')">
+        <div class="action-icon-circle">🏪</div>
+        <span>Cửa Hàng</span>
+      </div>
+    </div>
+
+    <!-- 4. User Status Card -->
+    <div class="user-status-card">
+      <!-- Khi chưa đăng nhập -->
+      <div class="auth-buttons-group" id="guestAuthGroup">
+        <button class="btn-auth btn-login-action" onclick="openAuthModal('login')">Đăng Nhập</button>
+        <button class="btn-auth btn-register-action" onclick="openAuthModal('register')">Đăng Ký</button>
+        <button class="btn-auth" onclick="openGiftcodeModal()" style="background: rgba(245, 158, 11, 0.18); border: 1px solid rgba(245, 158, 11, 0.4); color: #f59e0b; font-weight: 700;">🎁 Nhập Code</button>
+      </div>
+
+      <!-- Khi đã đăng nhập -->
+      <div class="logged-user-info" id="loggedUserInfo">
+        <div class="user-avatar-badge" onclick="openProfileModal()">
+          <div class="avatar-img" id="userAvatarText">U</div>
+          <div class="user-meta-info">
+            <div class="user-name-text" id="displayUsername">User</div>
+            <div class="user-balance-badge">
+              <span>Ví:</span>
+              <span id="displayUserBalance" style="color:#38bdf8;">0 đ</span>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <button class="btn-user-action" onclick="openGiftcodeModal()" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; font-weight: 800; border: none; cursor:pointer;">🎁 Nhập Code</button>
+          <a href="/admin" id="btnAdminLink" class="btn-user-action" style="display:none; text-decoration:none; background:#f59e0b; color:#000; font-weight:800;">Admin</a>
+          <button class="btn-user-action" onclick="handleLogout()">Đăng Xuất</button>
+        </div>
+      </div>
+
+      <!-- Các icon tiện ích bên phải -->
+      <div class="user-quick-icons">
+        <div class="u-icon-item" onclick="showToast('⭐ Cấp độ VIP: Thăng hạng VIP bằng cách tích lũy vòng quay!')">
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7.2-6.3-4.6-6.3 4.6 2.3-7.2-6-4.6h7.6z"/></svg>
+          <span>VIP</span>
+        </div>
+        <div class="u-icon-item" onclick="showToast('👥 Mời Bạn Bè: Nhận ngay 100.000 VNĐ khi bạn bè đăng ký!')">
+          <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+          <span>Mời Bạn</span>
+        </div>
+        <div class="u-icon-item" onclick="showToast('💬 CSKH: Đội ngũ hỗ trợ 24/7 trực tuyến.')">
+          <svg viewBox="0 0 24 24"><path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57a1.02 1.02 0 0 0-1.02.24l-2.2 2.2a15.045 15.045 0 0 1-6.59-6.59l2.2-2.21a.96.96 0 0 0 .25-1A11.36 11.36 0 0 1 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1zM19 12h2a9 9 0 0 0-9-9v2a7 7 0 0 1 7 7z"/></svg>
+          <span>CSKH</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Main Game Layout (Menu Phân Loại Trái & Lưới Game Phải) -->
+    <div class="main-game-layout">
+      <!-- Cột danh mục bên trái -->
+      <aside class="sidebar-categories">
+        <button class="cat-btn active" onclick="switchCategory('all', this)">
+          <span class="cat-icon">🔥</span>
+          <span class="cat-name">Tất Cả</span>
+        </button>
+        <button class="cat-btn" onclick="switchCategory('slot', this)">
+          <span class="cat-icon">🎡</span>
+          <span class="cat-name">Vòng Quay</span>
+        </button>
+        <button class="cat-btn" onclick="switchCategory('arcade', this)">
+          <span class="cat-icon">⛏️</span>
+          <span class="cat-name">Arcade / Đào Kho Báu</span>
+        </button>
+        <button class="cat-btn" onclick="switchCategory('crash', this)">
+          <span class="cat-icon">✈️</span>
+          <span class="cat-name">Bay Lượn / Crash</span>
+        </button>
+        <button class="cat-btn" onclick="switchCategory('fish', this)">
+          <span class="cat-icon">🐟</span>
+          <span class="cat-name">Bắn Cá</span>
+        </button>
+      </aside>
+
+      <!-- Danh sách game bên phải -->
+      <main class="game-content-area">
+        <div class="sub-tabs-header">
+          <div class="sub-tab active" onclick="switchSubTab(this)">Hot Nhất</div>
+          <div class="sub-tab" onclick="switchSubTab(this)">Mới Nhất</div>
+          <div class="sub-tab" onclick="switchSubTab(this)">Yêu Thích</div>
+        </div>
+
+        <!-- Lưới game chính -->
+        <div class="game-grid" id="gameGrid">
+
+          <!-- Game 1: Quyết Chiến Giành Tiền Thưởng (Wild Bounty Showdown - Slot 135) -->
+          <div class="game-card" data-cat="slot" onclick="launchGame('slot135')">
+            <div class="game-card-banner">
+              <span class="card-hot-badge">HOT</span>
+              <img src="/images/game135.png" alt="Quyết Chiến Giành Tiền Thưởng">
+            </div>
+            <div class="game-card-title">Quyết Chiến Giành...</div>
+            <div class="game-card-tag">Vòng Quay • PG Soft</div>
+          </div>
+
+          <!-- Game 2: Falling Pickaxe (Arcade / Đào Kho Báu) -->
+          <div class="game-card" data-cat="arcade" onclick="launchGame('falling-pickaxe')">
+            <div class="game-card-banner">
+              <span class="card-new-badge">MỚI</span>
+              <img src="/images/falling_pickaxe.png" alt="Falling Pickaxe">
+            </div>
+            <div class="game-card-title">Falling Pickaxe</div>
+            <div class="game-card-tag">Arcade • Đào Kho Báu</div>
+          </div>
+
+          <!-- Game 3: Aviamasters 2 (Bay Lượn / Crash) -->
+          <div class="game-card" data-cat="crash" onclick="launchGame('aviamasters2')">
+            <div class="game-card-banner">
+              <span class="card-hot-badge">HOT</span>
+              <img src="/images/aviamasters2.png" alt="Aviamasters 2">
+            </div>
+            <div class="game-card-title">Aviamasters 2</div>
+            <div class="game-card-tag">Bay Lượn • Crash Game</div>
+          </div>
+
+        </div>
+
+        <!-- Màn hình trạng thái trống cho các danh mục đang cập nhật -->
+        <div class="empty-category-view" id="emptyCategoryView">
+          <div class="empty-category-icon" id="emptyIcon">🚀</div>
+          <div class="empty-category-title" id="emptyTitle">Đang Cập Nhật Nội Dung</div>
+          <div class="empty-category-desc" id="emptyDesc">Chuyên mục đang trong quá trình chuẩn bị máy chủ game bản quyền. Vui lòng quay lại sau!</div>
+          <button class="btn-return-all" onclick="resetToAllCategories()">Xem Tất Cả Trò Chơi</button>
+        </div>
+
+      </main>
+    </div>
+
+    <!-- 6. Bottom Navigation Bar -->
+    <nav class="bottom-nav-bar">
+      <div class="nav-item active" id="navHome" onclick="resetToAllCategories()">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Trang Chủ</span>
+      </div>
+      <div class="nav-item" onclick="openGiftcodeModal()">
+        <span class="nav-icon">🎁</span>
+        <span class="nav-label">Nhận Code</span>
+      </div>
+      <div class="nav-item" onclick="openLeaderboardModal()">
+        <span class="nav-icon">🏆</span>
+        <span class="nav-label">Xếp Hạng</span>
+      </div>
+      <div class="nav-item" onclick="showToast('📋 Nhiệm Vụ: Hoàn thành 10 vòng quay mỗi ngày để nhận quà!')">
+        <span class="nav-icon">📋</span>
+        <span class="nav-label">Nhiệm Vụ</span>
+        <span class="nav-badge-dot"></span>
+      </div>
+      <div class="nav-item" onclick="handleProfileNav()">
+        <span class="nav-icon">👤</span>
+        <span class="nav-label">Cá Nhân</span>
+      </div>
+    </nav>
+  </div>
+
+  <!-- 7. Modal Đăng nhập / Đăng ký -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-box">
+      <div class="modal-header-tabs">
+        <button class="auth-tab-btn active" id="tabBtnLogin" onclick="switchAuthTab('login')">Đăng Nhập</button>
+        <button class="auth-tab-btn" id="tabBtnRegister" onclick="switchAuthTab('register')">Đăng Ký</button>
+      </div>
+
+      <div class="modal-body">
+        <div id="promoRegisterBadge" class="promo-banner-badge" style="display:none; background:rgba(245,158,11,0.15); border-color:rgba(245,158,11,0.35); color:#f59e0b;">
+          🎁 <strong>NHẬP GIFTCODE</strong> để nhận tiền thưởng trải nghiệm trực tiếp vào ví!
+        </div>
+
+        <div class="error-msg-box" id="authErrorMsg"></div>
+
+        <form id="authForm" onsubmit="handleAuthSubmit(event)">
+          <div class="form-group">
+            <label for="inputUsername">Tên tài khoản</label>
+            <input type="text" id="inputUsername" class="form-control" placeholder="Nhập tên đăng nhập..." required autocomplete="username">
+          </div>
+
+          <div class="form-group">
+            <label for="inputPassword">Mật khẩu</label>
+            <input type="password" id="inputPassword" class="form-control" placeholder="Nhập mật khẩu..." required autocomplete="current-password">
+          </div>
+
+          <button type="submit" class="btn-submit-auth" id="btnSubmitAuth">Đăng Nhập</button>
+          <button type="button" class="btn-close-modal" onclick="closeAuthModal()">Đóng cửa sổ</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. Modal Thông Tin Cá Nhân (Profile Modal) -->
+  <div class="modal-overlay" id="profileModal">
+    <div class="modal-box">
+      <div style="background:#0b1324; padding:16px 20px; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-weight:800; font-size:15px; color:#f59e0b;">👤 Thông Tin Tài Khoản</span>
+        <button onclick="closeProfileModal()" style="background:none; border:none; color:#94a3b8; font-size:18px; cursor:pointer;">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="profile-card-content">
+          <div class="profile-field">
+            <span style="color:#94a3b8;">Tên tài khoản:</span>
+            <strong id="profUsername" style="color:#fff;">-</strong>
+          </div>
+          <div class="profile-field">
+            <span style="color:#94a3b8;">Số dư khả dụng:</span>
+            <strong id="profBalance" style="color:#10b981;">0 đ</strong>
+          </div>
+          <div class="profile-field">
+            <span style="color:#94a3b8;">Cấp bậc thành viên:</span>
+            <span id="profRole" style="color:#38bdf8; font-weight:700;">Thành Viên</span>
+          </div>
+        </div>
+
+        <div style="margin-top:16px; display:flex; flex-direction:column; gap:8px;">
+          <button onclick="closeProfileModal(); openGiftcodeModal();" style="background:linear-gradient(135deg, #f59e0b, #d97706); color:#000; padding:10px; border-radius:8px; font-weight:800; cursor:pointer; border:none;">🎁 Nhập Mã Giftcode Nhận Thưởng</button>
+          <a href="/admin" id="profAdminBtn" style="display:none; text-align:center; background:#f59e0b; color:#000; padding:10px; border-radius:8px; font-weight:800; text-decoration:none;">Truy Cập Trang Quản Trị (Admin)</a>
+          <button onclick="handleLogout()" style="background:rgba(239,68,68,0.2); border:1px solid rgba(239,68,68,0.4); color:#ef4444; padding:10px; border-radius:8px; font-weight:700; cursor:pointer;">Đăng Xuất</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8.5. Modal Nhập Gift Code (Mã Quà Tặng Do Admin Ban Hành) -->
+  <div class="modal-overlay" id="giftcodeModal" onclick="if(event.target === this) closeGiftcodeModal()">
+    <div class="modal-box" style="border: 1px solid rgba(245, 158, 11, 0.4); box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 25px rgba(245, 158, 11, 0.2);">
+      <div style="background: linear-gradient(180deg, #182542 0%, #0d1527 100%); padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 22px;">🎁</span>
+          <strong style="color: #ffffff; font-size: 15px; font-weight: 800;">NHẬP MÃ GIFT CODE</strong>
+        </div>
+        <button onclick="closeGiftcodeModal()" style="background: none; border: none; color: #94a3b8; font-size: 18px; cursor: pointer;">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; font-size: 12px; color: #f59e0b; line-height: 1.5;">
+          ✨ Nhập mã Giftcode do Ban Quản Trị (Admin) cấp để nhận thưởng tức thì vào ví của bạn!
+        </div>
+
+        <div id="giftcodeAlertBox" style="display: none; padding: 10px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; margin-bottom: 14px;"></div>
+
+        <form onsubmit="handleRedeemGiftcode(event)">
+          <div class="form-group">
+            <label for="inputGiftcode" style="color: #cbd5e1; font-size: 12px; font-weight: 600; display: block; margin-bottom: 6px;">Mã Quà Tặng (Giftcode)</label>
+            <input type="text" id="inputGiftcode" class="form-control" placeholder="VD: TANTHU500K..." style="text-transform: uppercase; font-weight: 800; letter-spacing: 1.5px; color: #f59e0b; font-size: 15px; text-align: center;" required autocomplete="off">
+          </div>
+
+          <button type="submit" id="btnSubmitGiftcode" class="btn-submit-auth" style="margin-top: 10px; background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);">
+            🎁 Nhận Thưởng Ngay
+          </button>
+          <button type="button" class="btn-close-modal" onclick="closeGiftcodeModal()">Đóng cửa sổ</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. Modal Bảng Xếp Hạng (Leaderboard Modal) -->
+  <div class="modal-overlay" id="leaderboardModal" onclick="if(event.target === this) closeLeaderboardModal()">
+    <div class="lb-modal-box">
+      <div class="lb-header">
+        <div class="lb-title-group">
+          <div class="lb-title-icon">🏆</div>
+          <div class="lb-title-text">
+            <h3>BẢNG XẾP HẠNG TÀI PHÚ</h3>
+            <p>Top 20 cao thủ nắm giữ số dư lớn nhất</p>
+          </div>
+        </div>
+        <button class="btn-close-lb" onclick="closeLeaderboardModal()">✕</button>
+      </div>
+
+      <!-- Bục vinh danh Top 3 (Podium) -->
+      <div class="lb-podium" id="lbPodium">
+        <!-- Render bằng JavaScript -->
+      </div>
+
+      <!-- Danh sách từ Hạng 4 - 20 -->
+      <div class="lb-list" id="lbList">
+        <div style="text-align:center; padding:30px; color:#94a3b8; font-size:13px;">
+          Đang tải bảng xếp hạng cao thủ...
+        </div>
+      </div>
+
+      <!-- Thanh trạng thái thứ hạng của người dùng hiện tại -->
+      <div class="lb-footer">
+        <div class="lb-my-rank">
+          <div class="lb-my-rank-title">Vị Trí Của Bạn</div>
+          <div class="lb-my-rank-val" id="lbMyRankDisplay">Chưa đăng nhập</div>
+        </div>
+        <button class="btn-refresh-lb" onclick="loadLeaderboardData()">
+          <span>🔄</span> Làm mới
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentAuthMode = 'login';
+    let currentUserSession = null;
+    let currentCategory = 'all';
+
+    function showToast(msg, duration = 3000) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast-item';
+      toast.innerHTML = `<span>⚡</span> <span>${msg}</span>`;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-10px)';
+        toast.style.transition = 'all 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, duration);
+    }
+
+    function switchSubTab(el) {
+      document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      showToast(`Đã chuyển sang chế độ "${el.textContent}"`);
+    }
+
+    // Chuyển đổi danh mục trò chơi bên trái
+    function switchCategory(cat, btnEl) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+
+      const cards = document.querySelectorAll('.game-card');
+      const emptyView = document.getElementById('emptyCategoryView');
+      const gameGrid = document.getElementById('gameGrid');
+
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const cardCat = card.getAttribute('data-cat');
+        if (cat === 'all' || cardCat === cat) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      if (visibleCount === 0) {
+        gameGrid.style.display = 'none';
+        emptyView.style.display = 'flex';
+        const icons = { fish: '🐟' };
+        const titles = { fish: 'Bắn Cá Đại Dương' };
+        document.getElementById('emptyIcon').textContent = icons[cat] || '🎮';
+        document.getElementById('emptyTitle').textContent = `Chuyên Mục ${titles[cat] || 'Game'} Đang Cập Nhật`;
+      } else {
+        gameGrid.style.display = 'grid';
+        emptyView.style.display = 'none';
+      }
+    }
+
+    function resetToAllCategories() {
+      const allBtn = document.querySelector('.cat-btn');
+      switchCategory('all', allBtn);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openAuthModal(mode = 'login') {
+      currentAuthMode = mode;
+      document.getElementById('authModal').classList.add('show');
+      switchAuthTab(mode);
+    }
+
+    function closeAuthModal() {
+      document.getElementById('authModal').classList.remove('show');
+      document.getElementById('authErrorMsg').style.display = 'none';
+    }
+
+    function openProfileModal() {
+      if (!currentUserSession) {
+        openAuthModal('login');
+        return;
+      }
+      document.getElementById('profUsername').textContent = currentUserSession.username;
+      document.getElementById('profBalance').textContent = formatVND(currentUserSession.balance);
+      document.getElementById('profRole').textContent = currentUserSession.role === 'admin' ? 'Quản Trị Viên (Admin)' : 'Thành Viên VIP';
+      document.getElementById('profAdminBtn').style.display = currentUserSession.role === 'admin' ? 'block' : 'none';
+      document.getElementById('profileModal').classList.add('show');
+    }
+
+    function closeProfileModal() {
+      document.getElementById('profileModal').classList.remove('show');
+    }
+
+    function handleProfileNav() {
+      if (currentUserSession) {
+        openProfileModal();
+      } else {
+        openAuthModal('login');
+      }
+    }
+
+    function switchAuthTab(mode) {
+      currentAuthMode = mode;
+      const tabLogin = document.getElementById('tabBtnLogin');
+      const tabReg = document.getElementById('tabBtnRegister');
+      const btnSubmit = document.getElementById('btnSubmitAuth');
+      const promoBadge = document.getElementById('promoRegisterBadge');
+      const errorBox = document.getElementById('authErrorMsg');
+
+      errorBox.style.display = 'none';
+
+      if (mode === 'login') {
+        tabLogin.classList.add('active');
+        tabReg.classList.remove('active');
+        btnSubmit.textContent = 'Đăng Nhập';
+        promoBadge.style.display = 'none';
+      } else {
+        tabLogin.classList.remove('active');
+        tabReg.classList.add('active');
+        btnSubmit.textContent = 'Đăng Ký Tài Khoản';
+        promoBadge.style.display = 'block';
+      }
+    }
+
+    function formatVND(num) {
+      return (Number(num) * 1000).toLocaleString('vi-VN') + ' đ';
+    }
+
+    // Kiểm tra trạng thái phiên làm việc từ MongoDB backend
+    async function checkAuthStatus() {
+      const token = localStorage.getItem('game_token');
+      if (!token) {
+        showGuestState();
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/auth/me', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        if (data.ok && data.user) {
+          currentUserSession = data.user;
+          showLoggedInState(data.user);
+        } else {
+          if (data.isBanned) {
+            alert('🚫 Tài khoản của bạn đã bị khóa bởi Quản trị viên (Admin)!');
+            showToast('🚫 Tài khoản của bạn đã bị khóa!', 5000);
+          }
+          localStorage.removeItem('game_token');
+          showGuestState();
+        }
+      } catch (e) {
+        showGuestState();
+      }
+    }
+
+    function showGuestState() {
+      currentUserSession = null;
+      document.getElementById('guestAuthGroup').style.display = 'flex';
+      document.getElementById('loggedUserInfo').style.display = 'none';
+    }
+
+    function showLoggedInState(user) {
+      document.getElementById('guestAuthGroup').style.display = 'none';
+      document.getElementById('loggedUserInfo').style.display = 'flex';
+
+      document.getElementById('displayUsername').textContent = user.username;
+      document.getElementById('displayUserBalance').textContent = formatVND(user.balance);
+      document.getElementById('userAvatarText').textContent = user.username.charAt(0).toUpperCase();
+
+      if (user.role === 'admin') {
+        document.getElementById('btnAdminLink').style.display = 'block';
+      } else {
+        document.getElementById('btnAdminLink').style.display = 'none';
+      }
+    }
+
+    // Xử lý gửi form Đăng nhập / Đăng ký qua MongoDB
+    async function handleAuthSubmit(e) {
+      e.preventDefault();
+      const username = document.getElementById('inputUsername').value.trim();
+      const password = document.getElementById('inputPassword').value.trim();
+      const errorBox = document.getElementById('authErrorMsg');
+
+      errorBox.style.display = 'none';
+
+      const endpoint = currentAuthMode === 'login' ? '/api/auth/login' : '/api/auth/register';
+
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+
+        if (data.ok && data.token) {
+          localStorage.setItem('game_token', data.token);
+          currentUserSession = data.user;
+          showLoggedInState(data.user);
+          closeAuthModal();
+
+          if (currentAuthMode === 'register') {
+            showToast(`🎉 Chúc mừng ${data.user.username} đã tạo tài khoản thành công! Hãy nhập Giftcode để nhận thưởng!`, 4000);
+            setTimeout(() => { openGiftcodeModal(); }, 600);
+          } else {
+            showToast(`👋 Chào mừng ${data.user.username} đã quay trở lại!`);
+          }
+        } else {
+          errorBox.textContent = data.msg || 'Có lỗi xảy ra, vui lòng thử lại!';
+          errorBox.style.display = 'block';
+        }
+      } catch (err) {
+        errorBox.textContent = 'Không thể kết nối đến máy chủ!';
+        errorBox.style.display = 'block';
+      }
+    }
+
+    function handleLogout() {
+      const token = localStorage.getItem('game_token');
+      if (token) {
+        fetch('/api/auth/logout', {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + token }
+        }).catch(() => {});
+      }
+      localStorage.removeItem('game_token');
+      showGuestState();
+      closeProfileModal();
+      showToast('Đã đăng xuất tài khoản an toàn.');
+    }
+
+    // KHỞI ĐỘNG CÁC TRÒ CHƠI LIÊN KẾT VỚI TÀI KHOẢN VÀ SỐ DƯ
+    function launchGame(gameType) {
+      if (!currentUserSession) {
+        openAuthModal('login');
+        return;
+      }
+
+      // Kiểm tra số dư nếu bằng 0 thì cảnh báo
+      if (currentUserSession.balance <= 0) {
+        showToast('⚠️ Số dư của bạn đã hết (0 VNĐ). Hãy nạp thêm tiền tại Admin!');
+        alert('⚠️ Số dư của bạn đã hết (0 VNĐ)!\nVui lòng liên hệ Admin để được cấp thêm tiền trước khi chơi.');
+        return;
+      }
+
+      const token = localStorage.getItem('game_token') || '';
+      const u = encodeURIComponent(currentUserSession.username);
+      const t = encodeURIComponent(token);
+
+      if (gameType === 'slot135') {
+        const GAME_QUERY = '?ot=ca7094186b309ee149c55c8822e7ecf2&l=vi&btt=2&ao=22wle%3Db26tvvy7y%3Dyki&or=11deletn%3Dar-opxz%3Dnzx&__hv=2fMEUCIQDF0iJq%2BNIQQsoh5fQlEkTmrEv4vgZV4bYuMaUcrzI0PwIgMDpsistP9y0FOI7VYtjdVPc17nZdpgfPM4LtReWZ9Es%3D&__sv=010501HSlD3JHtvMhHjGea7u3RdvQg6W6L5QG99dNPORhxcGY';
+        window.location.href = `/135/index.html${GAME_QUERY}&user=${u}&token=${t}`;
+      } else if (gameType === 'falling-pickaxe') {
+        window.location.href = `/game/falling-pickaxe?token=KrihrfWXpba7VWVD63aBPHhb8&lang=en&user=${u}&authToken=${t}`;
+      } else if (gameType === 'aviamasters2') {
+        window.location.href = `/game/aviamasters2?user=${u}&token=${t}`;
+      }
+    }
+
+    // -------------------------------------------------------------
+    // QUẢN LÝ NHẬP MÃ GIFT CODE (DÀNH CHO NGƯỜI CHƠI)
+    // -------------------------------------------------------------
+    function openGiftcodeModal() {
+      if (!currentUserSession) {
+        showToast('🔑 Vui lòng đăng nhập tài khoản trước khi nhập Giftcode!');
+        openAuthModal('login');
+        return;
+      }
+      const modal = document.getElementById('giftcodeModal');
+      const alertBox = document.getElementById('giftcodeAlertBox');
+      const input = document.getElementById('inputGiftcode');
+      alertBox.style.display = 'none';
+      input.value = '';
+      modal.classList.add('show');
+      modal.classList.add('active');
+      modal.style.display = 'flex';
+      setTimeout(() => input.focus(), 150);
+    }
+
+    function closeGiftcodeModal() {
+      const modal = document.getElementById('giftcodeModal');
+      modal.classList.remove('show');
+      modal.classList.remove('active');
+      modal.style.display = 'none';
+    }
+
+    async function handleRedeemGiftcode(e) {
+      e.preventDefault();
+      if (!currentUserSession) {
+        openAuthModal('login');
+        return;
+      }
+
+      const input = document.getElementById('inputGiftcode');
+      const code = input.value.trim().toUpperCase();
+      const alertBox = document.getElementById('giftcodeAlertBox');
+      const btn = document.getElementById('btnSubmitGiftcode');
+
+      if (!code) {
+        alertBox.textContent = 'Vui lòng nhập mã Giftcode!';
+        alertBox.style.background = 'rgba(239, 68, 68, 0.15)';
+        alertBox.style.border = '1px solid rgba(239, 68, 68, 0.4)';
+        alertBox.style.color = '#ef4444';
+        alertBox.style.display = 'block';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = '⏳ Đang kiểm tra...';
+
+      const token = localStorage.getItem('game_token');
+      try {
+        const res = await fetch('/api/giftcode/redeem', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({ code, username: currentUserSession.username })
+        });
+        const data = await res.json();
+
+        if (data.ok) {
+          alertBox.textContent = data.msg || `🎉 Nhận thành công +${data.rewardVND}!`;
+          alertBox.style.background = 'rgba(16, 185, 129, 0.18)';
+          alertBox.style.border = '1px solid rgba(16, 185, 129, 0.5)';
+          alertBox.style.color = '#10b981';
+          alertBox.style.display = 'block';
+
+          // Cập nhật số dư người chơi ngay tức thì
+          if (typeof data.newBalance === 'number') {
+            currentUserSession.balance = data.newBalance;
+            document.getElementById('displayUserBalance').textContent = formatVND(data.newBalance);
+            const profBal = document.getElementById('profBalance');
+            if (profBal) profBal.textContent = formatVND(data.newBalance);
+          }
+
+          showToast(`🎉 Nhận thành công +${data.rewardVND} từ Giftcode [${data.code}]!`);
+          input.value = '';
+
+          setTimeout(() => {
+            closeGiftcodeModal();
+          }, 1800);
+        } else {
+          alertBox.textContent = data.msg || 'Mã Giftcode không hợp lệ!';
+          alertBox.style.background = 'rgba(239, 68, 68, 0.15)';
+          alertBox.style.border = '1px solid rgba(239, 68, 68, 0.4)';
+          alertBox.style.color = '#ef4444';
+          alertBox.style.display = 'block';
+        }
+      } catch (err) {
+        alertBox.textContent = 'Lỗi kết nối đến máy chủ!';
+        alertBox.style.background = 'rgba(239, 68, 68, 0.15)';
+        alertBox.style.border = '1px solid rgba(239, 68, 68, 0.4)';
+        alertBox.style.color = '#ef4444';
+        alertBox.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '🎁 Nhận Thưởng Ngay';
+      }
+    }
+
+    // -------------------------------------------------------------
+    // BẢNG XẾP HẠNG (LEADERBOARD) - TOP TÀI PHÚ NHIỀU TIỀN NHẤT
+    // -------------------------------------------------------------
+    function openLeaderboardModal() {
+      const modal = document.getElementById('leaderboardModal');
+      modal.classList.add('show');
+      modal.classList.add('active');
+      modal.style.display = 'flex';
+      loadLeaderboardData();
+    }
+
+    function closeLeaderboardModal() {
+      const modal = document.getElementById('leaderboardModal');
+      modal.classList.remove('show');
+      modal.classList.remove('active');
+      modal.style.display = 'none';
+    }
+
+    async function loadLeaderboardData() {
+      const podiumEl = document.getElementById('lbPodium');
+      const listEl = document.getElementById('lbList');
+      const myRankEl = document.getElementById('lbMyRankDisplay');
+
+      const token = localStorage.getItem('game_token');
+      const headers = {};
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+
+      try {
+        const res = await fetch('/api/leaderboard', { headers });
+        const data = await res.json();
+
+        if (!data.ok || !data.topUsers || data.topUsers.length === 0) {
+          podiumEl.innerHTML = '';
+          listEl.innerHTML = '<div style="text-align:center; padding:30px; color:#94a3b8; font-size:13px;">Chưa có dữ liệu người chơi xếp hạng.</div>';
+          return;
+        }
+
+        const topUsers = data.topUsers;
+        const top1 = topUsers[0];
+        const top2 = topUsers[1];
+        const top3 = topUsers[2];
+        const rest = topUsers.slice(3);
+
+        const curUser = currentUserSession ? currentUserSession.username : null;
+
+        // Render Bục Vinh Danh Top 3 (Podium)
+        let podiumHtml = '';
+        if (top2) {
+          podiumHtml += `
+            <div class="podium-slot rank-2">
+              <div class="podium-avatar">
+                ${top2.username.charAt(0).toUpperCase()}
+                <div class="podium-badge">🥈 #2</div>
+              </div>
+              <div class="podium-user">${top2.username}${curUser === top2.username ? ' (Bạn)' : ''}</div>
+              <div class="podium-bal">${top2.balanceVND}</div>
+            </div>
+          `;
+        }
+        if (top1) {
+          podiumHtml += `
+            <div class="podium-slot rank-1">
+              <div class="podium-crown">👑</div>
+              <div class="podium-avatar">
+                ${top1.username.charAt(0).toUpperCase()}
+                <div class="podium-badge">🥇 #1</div>
+              </div>
+              <div class="podium-user">${top1.username}${curUser === top1.username ? ' (Bạn)' : ''}</div>
+              <div class="podium-bal">${top1.balanceVND}</div>
+            </div>
+          `;
+        }
+        if (top3) {
+          podiumHtml += `
+            <div class="podium-slot rank-3">
+              <div class="podium-avatar">
+                ${top3.username.charAt(0).toUpperCase()}
+                <div class="podium-badge">🥉 #3</div>
+              </div>
+              <div class="podium-user">${top3.username}${curUser === top3.username ? ' (Bạn)' : ''}</div>
+              <div class="podium-bal">${top3.balanceVND}</div>
+            </div>
+          `;
+        }
+        podiumEl.innerHTML = podiumHtml;
+
+        // Render Danh Sách Hạng 4 - 20
+        if (rest.length === 0) {
+          listEl.innerHTML = '<div style="text-align:center; padding:20px; color:#64748b; font-size:12px;">Đang cập nhật thêm thành viên...</div>';
+        } else {
+          listEl.innerHTML = rest.map(u => {
+            const isMe = curUser === u.username;
+            return `
+              <div class="lb-item ${isMe ? 'is-me' : ''}">
+                <div class="lb-item-left">
+                  <div class="lb-item-rank">#${u.rank}</div>
+                  <div class="lb-item-avatar">${u.username.charAt(0).toUpperCase()}</div>
+                  <div class="lb-item-name">
+                    ${u.username}
+                    ${isMe ? '<span class="lb-badge-you">Bạn</span>' : ''}
+                  </div>
+                </div>
+                <div class="lb-item-bal">${u.balanceVND}</div>
+              </div>
+            `;
+          }).join('');
+        }
+
+        // Cập nhật vị trí của user đang đăng nhập
+        if (data.currentUserRank) {
+          myRankEl.innerHTML = `Hạng <strong>#${data.currentUserRank.rank}</strong> &bull; <span style="color:#10b981;">${data.currentUserRank.balanceVND}</span>`;
+        } else if (currentUserSession) {
+          myRankEl.innerHTML = `Hạng <strong>#--</strong> &bull; <span style="color:#10b981;">${formatVND(currentUserSession.balance)}</span>`;
+        } else {
+          myRankEl.innerHTML = '<span style="color:#94a3b8; font-weight:500; font-size:12px;"><a href="javascript:void(0)" onclick="closeLeaderboardModal(); openAuthModal(\'login\');" style="color:#f59e0b; text-decoration:none;">Đăng nhập</a> để xem thứ hạng</span>';
+        }
+
+      } catch (err) {
+        listEl.innerHTML = '<div style="text-align:center; padding:30px; color:#ef4444; font-size:13px;">Không thể tải bảng xếp hạng lúc này.</div>';
+      }
+    }
+
+    // Tự động kiểm tra phiên và làm mới số dư với MongoDB mỗi 2 giây
+    checkAuthStatus();
+    setInterval(async () => {
+      if (currentUserSession) {
+        try {
+          const res = await fetch(`/api/state?user=${encodeURIComponent(currentUserSession.username)}`);
+          if (res.status === 403) {
+            const errD = await res.json();
+            if (errD.isBanned) {
+              alert('🚫 Tài khoản của bạn đã bị Quản trị viên (Admin) tạm khóa!');
+              handleLogout();
+              return;
+            }
+          }
+          const d = await res.json();
+          if (typeof d.balance === 'number') {
+            currentUserSession.balance = d.balance;
+            document.getElementById('displayUserBalance').textContent = formatVND(d.balance);
+            const profBal = document.getElementById('profBalance');
+            if (profBal) profBal.textContent = formatVND(d.balance);
+          }
+        } catch(e) {}
+      }
+    }, 2000);
+  </script>
+</body>
+</html>
