@@ -68,6 +68,16 @@
       "bannedReason": "",
       "createdAt": "2026-10-15T03:08:06.468Z",
       "lastLogin": "2026-10-15T03:08:06.468Z"
+    },
+    "heo11": {
+      "username": "heo11",
+      "password": "tambu0101",
+      "balance": 542,
+      "role": "user",
+      "isBanned": false,
+      "bannedReason": "",
+      "createdAt": "2026-10-15T03:59:27.611Z",
+      "lastLogin": "2026-10-15T03:59:27.611Z"
     }
   }
 }

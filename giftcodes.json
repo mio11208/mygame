@@ -4,9 +4,10 @@
     "reward": 500,
     "rewardVND": "500.000 đ",
     "maxUses": 1000,
-    "usedCount": 1,
+    "usedCount": 2,
     "usedBy": [
-      "testuser_1792033594353"
+      "testuser_1792033594353",
+      "heo11"
     ],
     "isActive": true,
     "createdAt": "2026-10-15T03:00:00.000Z"

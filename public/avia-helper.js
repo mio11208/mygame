@@ -13,6 +13,7 @@
         : 500.00;
 
     let customBalance = initialWallet; // Đơn vị ví (500.00 = 500,000 VNĐ)
+    let lastRemoteTotal = null;        // Tổng số dư thực tế phía remote BGaming để tính chính xác cược thường & mua bonus
     let pendingWin = 0;               // Tiền thắng của chuyến bay đang bay, chờ hạ cánh
     let pendingWinTimeout = null;      // Bộ đếm thời gian dự phòng nếu sự kiện hạ cánh bị trễ
     let isCommitting = false;
@@ -175,7 +176,7 @@
         }
     });
 
-    // 7. Hook window.fetch để chặn/sửa gói cược và trả thưởng của BGaming
+    // 7. Hook window.fetch để chặn/sửa gói cược, mua bonus và trả thưởng của BGaming
     window.fetch = async function(input, init) {
         const url = typeof input === 'string' ? input : (input && input.url ? input.url : '');
         const isBgamingApi = url.includes('/api/Aviamasters2/') || (window.__OPTIONS__ && window.__OPTIONS__.api && url.includes(window.__OPTIONS__.api));
@@ -193,18 +194,24 @@
                 flushPendingWin('next_spin_start');
             }
 
-            // Chặn cược khi hết số dư hoặc cược vượt quá số dư ví
+            // Chặn cược / mua bonus khi hết số dư hoặc cược vượt quá số dư ví
             if (command === 'spin') {
-                const betSubunits = (reqBody && reqBody.options && typeof reqBody.options.bet === 'number')
+                let betSubunits = (reqBody && reqBody.options && typeof reqBody.options.bet === 'number')
                     ? reqBody.options.bet
                     : 1000;
+                
+                // Mua tính năng Bonus (freespin_chance) có hệ số nhân 50 lần cược cơ sở
+                if (reqBody && reqBody.options && reqBody.options.purchased_feature) {
+                    betSubunits = betSubunits * 50;
+                }
+
                 const betVal = betSubunits / 100;
 
                 if (customBalance < betVal || customBalance <= 0) {
-                    console.warn(`[Aviamasters Helper] Chặn cược: Số dư hiện tại (${customBalance}) < Tiền cược (${betVal})`);
+                    console.warn(`[Aviamasters Helper] Chặn cược/mua bonus: Số dư ví (${customBalance}) < Giá cược/tính năng (${betVal})`);
                     checkZeroBalanceAlert(customBalance);
                     const mockErr = {
-                        errors: [{ code: 1001, desc: "Số dư không đủ để thực hiện lượt bay! Vui lòng nạp thêm tiền hoặc nhập Giftcode." }]
+                        errors: [{ code: 1001, desc: `Số dư ví không đủ! Cần ${formatVND(betVal)} để thực hiện, nhưng ví chỉ còn ${formatVND(customBalance)}. Vui lòng nạp thêm tiền hoặc nhập Giftcode.` }]
                     };
                     return new Response(JSON.stringify(mockErr), {
                         status: 422,
@@ -222,6 +229,10 @@
 
                 // 1. Phản hồi cho lệnh 'init': Ghi đè số dư ví hiển thị trong game thành số dư của user
                 if (command === 'init' && json && json.balance) {
+                    if (typeof json.balance.wallet === 'number') {
+                        lastRemoteTotal = json.balance.wallet + (typeof json.balance.game === 'number' ? json.balance.game : 0);
+                    }
+
                     json.balance.wallet = Math.round(customBalance * 100);
                     if (json.options && json.options.currency) {
                         json.options.currency.symbol = "đ";
@@ -238,12 +249,23 @@
                 }
 
                 // 2. Phản hồi cho lệnh 'spin':
-                // - Trừ tiền cược ngay khi máy bay cất cánh
+                // - Trừ tiền cược / mua bonus ngay khi máy bay cất cánh
                 // - Ghi nhận tiền thắng (nếu có) để cộng khi máy bay hạ cánh thành công
                 if (command === 'spin' && json && json.balance) {
-                    const roundBetSubunits = (json.outcome && typeof json.outcome.bet === 'number')
-                        ? json.outcome.bet
-                        : (reqBody && reqBody.options && reqBody.options.bet ? reqBody.options.bet : 1000);
+                    // Tính chính xác số tiền cược thực tế bị trừ từ remote server BGaming
+                    let roundBetSubunits = 0;
+                    if (lastRemoteTotal !== null && typeof json.balance.wallet === 'number' && lastRemoteTotal > json.balance.wallet) {
+                        roundBetSubunits = lastRemoteTotal - json.balance.wallet;
+                    } else {
+                        // Fallback tính theo reqBody
+                        let baseSub = (reqBody && reqBody.options && typeof reqBody.options.bet === 'number') ? reqBody.options.bet : 1000;
+                        if (reqBody && reqBody.options && reqBody.options.purchased_feature) {
+                            baseSub = baseSub * 50;
+                        } else if (json.outcome && typeof json.outcome.bet === 'number') {
+                            baseSub = json.outcome.bet;
+                        }
+                        roundBetSubunits = baseSub;
+                    }
                     const roundBet = roundBetSubunits / 100;
 
                     const roundWinSubunits = (json.outcome && typeof json.outcome.win === 'number')
@@ -251,9 +273,15 @@
                         : (typeof json.balance.game === 'number' ? json.balance.game : 0);
                     const roundWin = roundWinSubunits / 100;
 
-                    // 1. Trừ tiền cược ngay lập tức khi máy bay xuất phát
+                    // Cập nhật lại lastRemoteTotal cho vòng cược kế tiếp
+                    if (typeof json.balance.wallet === 'number') {
+                        lastRemoteTotal = json.balance.wallet + (typeof json.balance.game === 'number' ? json.balance.game : 0);
+                    }
+
+                    // 1. Trừ tiền cược / tiền mua bonus ngay lập tức khi máy bay xuất phát
                     customBalance = Math.max(0, Number((customBalance - roundBet).toFixed(2)));
-                    console.log(`%c[Aviamasters 2] 🛫 Máy bay cất cánh! Cược: -${roundBet} (${formatVND(roundBet)}) => Số dư tạm tính: ${customBalance} (${formatVND(customBalance)}) | Tiền thắng dự kiến: +${roundWin} (${formatVND(roundWin)})`, 'color:#f59e0b; font-weight:bold;');
+                    const isBonusBuy = !!(reqBody && reqBody.options && reqBody.options.purchased_feature);
+                    console.log(`%c[Aviamasters 2] 🛫 ${isBonusBuy ? 'MUA TÍNH NĂNG BONUS' : 'Máy bay cất cánh'}! Giá: -${roundBet} (${formatVND(roundBet)}) => Số dư ví tạm tính: ${customBalance} (${formatVND(customBalance)}) | Tiền thắng dự kiến: +${roundWin} (${formatVND(roundWin)})`, 'color:#f59e0b; font-weight:bold;');
                     updateLiveDisplay(customBalance);
                     commitDelta(-roundBet);
 
@@ -271,7 +299,8 @@
 
                     // 3. Chuẩn hóa phản hồi cho BGaming engine:
                     // Engine game tính: e.balance = json.balance.wallet + json.balance.game
-                    // Do đó ví wallet = customBalance (đã trừ cược), còn game = roundWin
+                    // Do đó ví wallet = customBalance (đã trừ cược/mua bonus), còn game = roundWin
+                    // Khi máy bay cất cánh, game hiển thị số dư ví đã trừ.
                     // Khi máy bay hạ cánh, game sẽ tự cộng lên thành (customBalance + roundWin) hiển thị khớp 100% với Top Bar!
                     json.balance.wallet = Math.round(customBalance * 100);
                     json.balance.game = Math.round(roundWin * 100);
